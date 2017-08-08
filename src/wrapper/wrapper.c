@@ -49,7 +49,7 @@ int interface(int NR, cosmology cosmo, interface_parameters*params,
   return 0;
 }
 
-int python_interface(int NR, double h, double om, double ode, double ok,
+int python_interface(int NR, double h, double om,
 		     double Mass, double concentration,
 		     double Rmis, int delta,
 		     int averaging, int single,
@@ -68,8 +68,6 @@ int python_interface(int NR, double h, double om, double ode, double ok,
   cosmo->H0 = h*100.;
   cosmo->h = h;
   cosmo->om = om;
-  cosmo->ode = ode;
-  cosmo->ok = ok;
 
   interface_parameters*params=
     (interface_parameters*)malloc(sizeof(interface_parameters));

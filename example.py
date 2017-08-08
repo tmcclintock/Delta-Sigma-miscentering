@@ -7,8 +7,7 @@ plt.rc("font", size=12)
 
 
 R, sigma = np.genfromtxt("test_data/test.txt", unpack=True)
-cosmo = {"h":0.7,"om":0.3,"ok":0.0}
-cosmo["ode"]=1.0-cosmo["om"]
+cosmo = {"h":0.7,"om":0.3}
 
 params = {"Mass": 3*10**14,"NR":300,"Rmin":0.01,
                 "Rmax":200.0,"Nbins":15,"R_bin_min":0.01,"R_bin_max":200.0,

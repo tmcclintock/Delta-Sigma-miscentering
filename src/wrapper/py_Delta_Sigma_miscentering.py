@@ -13,13 +13,12 @@ interface = dslib.python_interface
 interface.restype = c_int
 """
 Arguments to the interface are: 
-NR,h,om,ode,ok,
+NR,h,om,
 Mass,concentration,
 Rmis,delta,
 single,
 averaging, Nbins,
 R_bin_min,R_bin_max,
-
 R,
 sigma,
 Rbins,
@@ -30,7 +29,7 @@ miscentered_delta_sigma,
 ave_miscentered_delta_sigma
 ave_delta_sigma_single
 """
-interface.argtypes=[c_int, c_double, c_double, c_double, c_double,
+interface.argtypes=[c_int, c_double, c_double,
                     c_double, c_double,
                     c_double, c_int,
                     c_int,
@@ -76,7 +75,7 @@ def calc_Delta_Sigma_miscentering(R, sigma, cosmo_dict, params):
         R_bin_min = min(R)
         R_bin_max = max(R)
 
-    h,om,ode,ok = cosmo_dict['h'],cosmo_dict['om'],cosmo_dict['ode'],cosmo_dict['ok']
+    h,om = cosmo_dict['h'],cosmo_dict['om']
 
     R = R.astype("float64")
     sigma = sigma.astype("float64")
@@ -98,7 +97,7 @@ def calc_Delta_Sigma_miscentering(R, sigma, cosmo_dict, params):
     ave_delta_sigma_single = np.zeros(Nbins)
     ave_delta_sigma_single_in = ave_delta_sigma_single.ctypes.data_as(POINTER(c_double))
 
-    result = interface(NR,h,om,ode,ok,
+    result = interface(NR,h,om,
                        Mass,concentration,
                        Rmis,delta,
                        averaging,single,

@@ -45,7 +45,7 @@ typedef struct wrapper_output{
 int interface(int NR, cosmology cosmo, interface_parameters*params,
 	      wrapper_output*outputs);
 
-int python_interface(int NR, double h, double om, double ode, double ok,
+int python_interface(int NR, double h, double om,
 		     double Mass, double concentration,
 		     double Rmis, int delta,
 		     int averaging, int single,
