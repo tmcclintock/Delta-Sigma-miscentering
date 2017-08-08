@@ -1,0 +1,2 @@
+There are some important file in here:
+test.txt contains the input used in the example above. output.txt contains output from the old Delta-Sigma code that contained the miscentering routines, so that they can be compared to this code (a regression test).
