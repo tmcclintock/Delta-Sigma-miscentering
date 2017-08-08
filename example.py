@@ -20,26 +20,26 @@ result = pyDSm.calc_Delta_Sigma_miscentering(R, sigma, cosmo, params)
 
 import pickle
 R_old, sigma_old, sigma_miscentered_old, sigma_m_old,\
-    miscentered_delta_sigma_old, delta_sigma_mis_old,\
+    miscentered_delta_sigma_old, delta_sigma_single_old,\
     ave_miscentered_delta_sigma_old,\
-    ave_delta_sigma_mis_old = pickle.load(open("test_data/output.p", "r"))
+    ave_delta_sigma_single_old = pickle.load(open("test_data/output.p", "r"))
 
 R = result["R"]
 sigma = result['sigma']
 sigma_miscentered = result['miscentered_sigma']
-sigma_m = result['sigma_mis']
+sigma_m = result['sigma_single']
 miscentered_delta_sigma = result['miscentered_delta_sigma']
-delta_sigma_mis = result['delta_sigma_mis']
+delta_sigma_single = result['delta_sigma_single']
 ave_miscentered_delta_sigma = result['ave_miscentered_delta_sigma']
-ave_delta_sigma_mis = result['ave_delta_sigma_mis']
+ave_delta_sigma_single = result['ave_delta_sigma_single']
 np.testing.assert_array_equal(R, R_old)
 np.testing.assert_array_equal(sigma, sigma_old)
 np.testing.assert_array_equal(sigma_miscentered, sigma_miscentered_old)
 np.testing.assert_array_equal(sigma_m, sigma_m_old)
 np.testing.assert_array_equal(miscentered_delta_sigma, miscentered_delta_sigma_old)
-np.testing.assert_array_equal(delta_sigma_mis, delta_sigma_mis_old)
+np.testing.assert_array_equal(delta_sigma_single, delta_sigma_single_old)
 np.testing.assert_array_equal(ave_miscentered_delta_sigma, ave_miscentered_delta_sigma_old)
-np.testing.assert_array_equal(ave_delta_sigma_mis, ave_delta_sigma_mis_old)
+np.testing.assert_array_equal(ave_delta_sigma_single, ave_delta_sigma_single_old)
 
 plt.loglog(R,sigma,label=r"$\Sigma$")
 plt.loglog(R,sigma_miscentered,label=r"$\Sigma_{\rm mis}$",ls='--')

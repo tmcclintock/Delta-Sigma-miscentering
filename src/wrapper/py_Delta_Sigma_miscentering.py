@@ -23,12 +23,12 @@ R_bin_min,R_bin_max,
 R,
 sigma,
 Rbins,
-sigma_mis,
-delta_sigma_mis
+sigma_single,
+delta_sigma_single
 miscentered_sigma,
 miscentered_delta_sigma,
 ave_miscentered_delta_sigma
-ave_delta_sigma_mis
+ave_delta_sigma_single
 """
 interface.argtypes=[c_int, c_double, c_double, c_double, c_double,
                     c_double, c_double,
@@ -63,13 +63,15 @@ def calc_Delta_Sigma_miscentering(R, sigma, cosmo_dict, params):
     NR = params["NR"]
     Rmis,fmis = params["Rmis"], params["fmis"]
 
-    single = params['single']
-    averaging = params['averaging']
-    if averaging:
+    if "single" in params: single = params['single']
+    else: single = 0
+    if "averaging" in params: 
+        averaging = params['averaging']
         Nbins = params['Nbins']
         R_bin_min = params['R_bin_min']
         R_bin_max = params['R_bin_max']
     else: #Default values to pass to C
+        averaging = 0
         Nbins = 2
         R_bin_min = min(R)
         R_bin_max = max(R)
@@ -80,10 +82,10 @@ def calc_Delta_Sigma_miscentering(R, sigma, cosmo_dict, params):
     sigma = sigma.astype("float64")
     R_in = R.ctypes.data_as(POINTER(c_double))
     sigma_in = sigma.ctypes.data_as(POINTER(c_double))
-    sigma_mis = np.zeros(NR)
-    sigma_mis_in = sigma_mis.ctypes.data_as(POINTER(c_double))
-    delta_sigma_mis = np.zeros(NR)
-    delta_sigma_mis_in = delta_sigma_mis.ctypes.data_as(POINTER(c_double))
+    sigma_single = np.zeros(NR)
+    sigma_single_in = sigma_single.ctypes.data_as(POINTER(c_double))
+    delta_sigma_single = np.zeros(NR)
+    delta_sigma_single_in = delta_sigma_single.ctypes.data_as(POINTER(c_double))
     miscentered_sigma = np.zeros(NR)
     miscentered_sigma_in = miscentered_sigma.ctypes.data_as(POINTER(c_double))
     miscentered_delta_sigma = np.zeros(NR)
@@ -93,8 +95,8 @@ def calc_Delta_Sigma_miscentering(R, sigma, cosmo_dict, params):
     Rbins_in = Rbins.ctypes.data_as(POINTER(c_double))
     ave_miscentered_delta_sigma = np.zeros(Nbins)
     ave_miscentered_delta_sigma_in = ave_miscentered_delta_sigma.ctypes.data_as(POINTER(c_double))
-    ave_delta_sigma_mis = np.zeros(Nbins)
-    ave_delta_sigma_mis_in = ave_delta_sigma_mis.ctypes.data_as(POINTER(c_double))
+    ave_delta_sigma_single = np.zeros(Nbins)
+    ave_delta_sigma_single_in = ave_delta_sigma_single.ctypes.data_as(POINTER(c_double))
 
     result = interface(NR,h,om,ode,ok,
                        Mass,concentration,
@@ -104,12 +106,12 @@ def calc_Delta_Sigma_miscentering(R, sigma, cosmo_dict, params):
                        R_in,
                        sigma_in,
                        Rbins_in,
-                       sigma_mis_in,
-                       delta_sigma_mis_in,
+                       sigma_single_in,
+                       delta_sigma_single_in,
                        miscentered_sigma_in,
                        miscentered_delta_sigma_in,
                        ave_miscentered_delta_sigma_in,
-                       ave_delta_sigma_mis_in)
+                       ave_delta_sigma_single_in)
 
     #Now build a dictionary and return it
     output = {"R":R,"sigma":sigma}
@@ -117,13 +119,13 @@ def calc_Delta_Sigma_miscentering(R, sigma, cosmo_dict, params):
     output["miscentered_delta_sigma"] = miscentered_delta_sigma
     
     if single:
-        output["sigma_mis"] = sigma_mis
-        output["delta_sigma_mis"] = delta_sigma_mis
+        output["sigma_single"] = sigma_single
+        output["delta_sigma_single"] = delta_sigma_single
     
     if averaging:
         output["Rbins"] = Rbins
         output["ave_miscentered_delta_sigma"] = ave_miscentered_delta_sigma
         if single:
-            output["ave_delta_sigma_mis"] = ave_delta_sigma_mis
+            output["ave_delta_sigma_single"] = ave_delta_sigma_single
 
     return output
